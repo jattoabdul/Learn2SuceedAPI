@@ -10,52 +10,39 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name')
 
 
-class YearSerializer(serializers.ModelSerializer):
+class ExamSubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Year
-        fields = ('year_number',)
-
-
-class ExamSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Exam
-        fields = ('name',)
-
-
-class SubjectSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Subject
-        fields = ('name',)
+        model = ExamSubject
+        fields = ('exam', 'subject', 'year', 'duration')
 
 
 class AnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ('text', 'is_valid')
+        fields = ('question', 'text', 'is_valid')
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    exam = serializers.ReadOnlyField(source='exam.name')
-    subject=serializers.ReadOnlyField(source='subject.name')
-    year = serializers.ReadOnlyField(source='year.year_number')
+    exam = serializers.ReadOnlyField(source='exam.exam')
+    subject = serializers.ReadOnlyField(source='exam.subject')
+    year = serializers.ReadOnlyField(source='exam.year')
     answers = serializers.SerializerMethodField()
 
     class Meta:
         model = Question
-        fields = ['exam', 'subject', 'year', 'answers']
+        fields = ['exam', 'subject', 'year', 'id', 'serial_no', 'question_text', 'answers']
 
-    def get_answers(self, obj):
-        return [{'text': a.text,'is_valid': a.is_valid} for a in obj.questions.all()]
+    @staticmethod
+    def get_answers(obj):
+        return [{'id': a.id, 'text': a.text, 'is_valid': a.is_valid} for a in obj.answers.all()]
 
 
 class UserScoreSerializer(serializers.ModelSerializer):
-    exam = ExamSerializer(read_only=True)
-    subject = SubjectSerializer(read_only=True)
-    user = UserSerializer(read_only=True)
+    exam = serializers.ReadOnlyField(source='exam.exam')
+    subject = serializers.ReadOnlyField(source='exam.subject')
+    user = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
         model = UserScore
@@ -63,8 +50,8 @@ class UserScoreSerializer(serializers.ModelSerializer):
 
 
 class LeadersBoardSerializer(serializers.ModelSerializer):
-    user_exam = UserScoreSerializer(read_only=True)
+    user = serializers.ReadOnlyField(source='user.user.username')
 
     class Meta:
         model = LeadersBoard
-        fields = ('user_exam', 'points')
+        fields = ('user', 'points')

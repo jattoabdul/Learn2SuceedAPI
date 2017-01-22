@@ -3,27 +3,15 @@ from learn.models import *
 
 
 # Register your models here.
-class ExamAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
-    search_fields = ['name']
-    list_display = ['name']
-
-
-class SubjectAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
-    search_fields = ['name']
-    list_display = ['name']
-
-
-class YearAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('year_number',)}
-    search_fields = ['year_number']
-    list_display = ['year_number']
+class ExamSubjectAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('exam', 'subject', 'year')}
+    search_fields = ['exam', 'subject', 'year']
+    list_display = ['exam', 'year', 'subject', 'duration']
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    search_fields = ['question_text', 'subject', 'exam', 'year']
-    list_display = ['serial_no', 'question_text', 'is_published', 'exam', 'subject', 'year']
+    search_fields = ['question_text', 'exam']
+    list_display = ['serial_no', 'question_text', 'is_published', 'exam']
     ordering = ['serial_no']
 
 
@@ -33,8 +21,9 @@ class AnswerAdmin(admin.ModelAdmin):
 
 
 class UserScoreAdmin(admin.ModelAdmin):
-    search_fields = ['user', 'score']
-    list_display = ['user', 'exam', 'subject', 'score']
+    search_fields = ['user', 'exam', 'score']
+    list_display = ['user', 'exam', 'score']
+    ordering = ['created_on']
 
 
 class LeadersBoardAdmin(admin.ModelAdmin):
@@ -43,9 +32,7 @@ class LeadersBoardAdmin(admin.ModelAdmin):
     ordering = ['points']
 
 # Register your models here.
-admin.site.register(Exam, ExamAdmin)
-admin.site.register(Subject, SubjectAdmin)
-admin.site.register(Year, YearAdmin)
+admin.site.register(ExamSubject, ExamSubjectAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(UserScore, UserScoreAdmin)

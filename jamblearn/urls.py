@@ -21,9 +21,7 @@ from rest_framework import routers, serializers, viewsets
 from learn.views import *
 
 router = routers.DefaultRouter()
-router.register(r'exams',  ExamViewSet,  base_name='Exams')
-router.register(r'subjects',  SubjectViewSet,  base_name='Subjects')
-router.register(r'years',  YearViewSet,  base_name='Years')
+router.register(r'examsubject',  ExamSubjectViewSet,  base_name='Exams')
 router.register(r'questions',  QuestionViewSet,  base_name='Questions')
 router.register(r'answers',  AnswerViewSet,  base_name='Answers')
 router.register(r'scores',  UserScoreViewSet,  base_name='UserScore')

@@ -22,21 +22,9 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (AdminOrReadOnly,)
 
 
-class SubjectViewSet(viewsets.ModelViewSet):
-    queryset = Subject.objects.all()
-    serializer_class = SubjectSerializer
-    permission_classes = (AdminOrReadOnly,)
-
-
-class ExamViewSet(viewsets.ModelViewSet):
-    queryset = Exam.objects.all()
-    serializer_class = ExamSerializer
-    permission_classes = (AdminOrReadOnly,)
-
-
-class YearViewSet(viewsets.ModelViewSet):
-    queryset = Year.objects.all()
-    serializer_class = YearSerializer
+class ExamSubjectViewSet(viewsets.ModelViewSet):
+    queryset = ExamSubject.objects.all()
+    serializer_class = ExamSubjectSerializer
     permission_classes = (AdminOrReadOnly,)
 
 
