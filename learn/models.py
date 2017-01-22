@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# Create your models here.
 class ExamSubject(models.Model):
     exam = models.CharField(max_length=64, verbose_name=u'Exam name')
     slug = models.SlugField(unique=True)
