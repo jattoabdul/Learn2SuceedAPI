@@ -39,14 +39,17 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    exam = ExamSerializer(read_only=True)
-    subject = SubjectSerializer(read_only=True)
-    year = YearSerializer(read_only=True)
-    answer = AnswerSerializer(read_only=True)
+    exam = serializers.ReadOnlyField(source='exam.name')
+    subject=serializers.ReadOnlyField(source='subject.name')
+    year = serializers.ReadOnlyField(source='year.year_number')
+    answers = serializers.SerializerMethodField()
 
     class Meta:
         model = Question
-        fields = ('exam', 'subject', 'year', 'question_text', 'answer')
+        fields = ['exam', 'subject', 'year', 'answers']
+
+    def get_answers(self, obj):
+        return [{'text': a.text,'is_valid': a.is_valid} for a in obj.questions.all()]
 
 
 class UserScoreSerializer(serializers.ModelSerializer):
