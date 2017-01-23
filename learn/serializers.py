@@ -1,3 +1,4 @@
+from rest_framework import filters
 from rest_framework import serializers
 from learn.models import *
 from django.contrib.auth.models import User
@@ -50,8 +51,9 @@ class UserScoreSerializer(serializers.ModelSerializer):
 
 
 class LeadersBoardSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.user.username')
+    total_points = serializers.ReadOnlyField()
 
     class Meta:
-        model = LeadersBoard
-        fields = ('user', 'points')
+        model = User
+        fields = ('username', 'total_points')
+        ordering = ('-total_points',)

@@ -26,14 +26,8 @@ class UserScoreAdmin(admin.ModelAdmin):
     ordering = ['created_on']
 
 
-class LeadersBoardAdmin(admin.ModelAdmin):
-    search_fields = ['user_exam', 'points']
-    list_display = ['user_exam', 'points']
-    ordering = ['points']
-
 # Register your models here.
 admin.site.register(ExamSubject, ExamSubjectAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(UserScore, UserScoreAdmin)
-admin.site.register(LeadersBoard, LeadersBoardAdmin)

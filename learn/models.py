@@ -53,29 +53,14 @@ class Answer(models.Model):
 # details of each instance of an exam taken by a user and his response with score
 class UserScore(models.Model):
     user = models.ForeignKey(User, related_name='myscores', on_delete=models.CASCADE)
-    exam = models.ForeignKey(ExamSubject, related_name='myscores')
+    exam = models.ForeignKey(ExamSubject, related_name='myscoresexam')
     score = models.CharField(max_length=20, verbose_name='my score')
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{username} - {exam} - {score}".format(username=self.user.username, exam=self.exam,
-                                                         score=self.score)
+        return "{username} - {exam} - {score}".format(username=self.user.username, exam=self.exam, score=self.score)
 
     class Meta:
         verbose_name = "UserScore"
         verbose_name_plural = "UserScores"
         ordering = ['created_on']
-
-
-# leadersboard table with username and the total score of all exam instance taken
-class LeadersBoard(models.Model):
-    user_exam = models.ForeignKey(UserScore, related_name='leadersboard', on_delete=models.CASCADE)
-    points = models.CharField(max_length=20, verbose_name='total points')  # total scores of UserScores for each user
-
-    def __str__(self):
-        return "{user} - {points}".format(user=self.user_exam, points=self.points)
-
-    class Meta:
-        verbose_name = "LeaderBoard"
-        verbose_name_plural = "LeadersBoard"
-        ordering = ['points']
