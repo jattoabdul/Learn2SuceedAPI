@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from ckeditor.widgets import CKEditorWidget
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 
 class ExamSubject(models.Model):
@@ -21,7 +23,7 @@ class ExamSubject(models.Model):
 
 # each questions with relationship to an exam, year and subject
 class Question(models.Model):
-    question_text = models.CharField(max_length=30000, verbose_name=u'Question\'s text')
+    question_text = models.TextField(verbose_name=u'Question\'s text')
     serial_no = models.IntegerField(verbose_name='Question\'s index',
             help_text='Questions will be shown based on their index, and this index is shown as the question number')
     is_published = models.BooleanField(default=False)
@@ -38,7 +40,7 @@ class Question(models.Model):
 
 # answers to a question
 class Answer(models.Model):
-    text = models.CharField(max_length=128, verbose_name=u'Answer\'s text')
+    text = models.TextField(verbose_name=u'Answer\'s text')
     is_valid = models.BooleanField(default=False, help_text='tick if answer is correct choice')
     question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)
 

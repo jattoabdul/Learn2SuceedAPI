@@ -25,7 +25,7 @@ SECRET_KEY = '5cn(hfkq@5n#kpb_^&d(&ls3^3dk1^*(*2sahsxq3cjh(m5@t@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','http://localhost:8100']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'learn',
     'guardian',
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
@@ -49,11 +50,14 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.twitter',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -116,6 +120,9 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  # default
     'guardian.backends.ObjectPermissionBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
 
 # Internationalization
@@ -183,3 +190,48 @@ EMAIL_HOST_PASSWORD = 'jasabs93'
 
 # email backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# setting for ckeditor upload file path
+CKEDITOR_UPLOAD_PATH = "uploads/"
+# other ckeditor settings
+CKEDITOR_UPLOAD_SLUGIFY_FILENAME = True
+CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_JQUERY_URL = '/static/vendor/jquery/jquery.min.js'
+
+# ckeditor default config
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full' 'codeSnippets',
+        'height': 400,
+        'width': 1000,
+        'removePlugins': 'stylesheetparser',
+        'extraPlugins': 'codesnippet',
+    },
+}
+
+CORS_ALLOW_HEADERS = (
+    'x-requested-with',
+    'content-type',
+    'accept',
+    'origin',
+    'authorization',
+    'X-CSRFToken'
+)
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8100'
+)
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
