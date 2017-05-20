@@ -63,6 +63,7 @@ requests==2.12.4
 requests-oauthlib==0.7.0
 six==1.10.0
 sorl-thumbnail==12.3
+south
 sqlparse==0.2.2
 tweepy==3.5.0
 uritemplate==3.0.0
