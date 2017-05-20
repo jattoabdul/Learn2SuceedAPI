@@ -15,6 +15,8 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Heroku Settings requirement
+import dj_database_url
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -22,10 +24,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '5cn(hfkq@5n#kpb_^&d(&ls3^3dk1^*(*2sahsxq3cjh(m5@t@'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*','http://localhost:8100']
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
+#
+# ALLOWED_HOSTS = ['*','http://localhost:8100']
 
 
 # Application definition
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'learn',
+    'filters',
     'guardian',
     'corsheaders',
     'rest_framework',
@@ -52,6 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.twitter',
     'ckeditor',
     'ckeditor_uploader',
+    'multiselectfield',
 ]
 
 MIDDLEWARE = [
@@ -152,11 +156,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ]
-    # ,
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #         'rest_framework.authentication.BasicAuthentication',
-    #         'rest_framework.authentication.SessionAuthentication',
-    # )
+    ,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework.authentication.TokenAuthentication',
+            'rest_framework.authentication.BasicAuthentication',
+            # 'rest_framework.authentication.SessionAuthentication',  # add all auth classes to pythonanywhere
+    )
 }
 
 # cache settings
@@ -221,7 +226,8 @@ CORS_ALLOW_HEADERS = (
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8100'
+    'http://localhost:8100',
+    'localhost:63342'
 )
 CORS_ALLOW_METHODS = (
     'DELETE',
@@ -235,3 +241,19 @@ CORS_ALLOW_METHODS = (
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
+OLD_PASSWORD_FIELD_ENABLED = False # add all account auth to python anywhere
+
+# Heroku Settings
+DATABASES['default'] = dj_database_url.config()
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+ALLOWED_HOSTS = ['*']
+# ,'http://localhost:8100'
+
+DEBUG = False
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass

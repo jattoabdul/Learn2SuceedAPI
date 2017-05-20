@@ -1,5 +1,5 @@
 from rest_framework import filters
-from rest_framework import serializers
+from rest_framework import serializers, fields
 from learn.models import *
 from django.contrib.auth.models import User
 
@@ -9,6 +9,14 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name')
+
+
+class ExamsSerializer(serializers.HyperlinkedModelSerializer):
+    subjects = fields.MultipleChoiceField(choices=MY_CHOICES)
+
+    class Meta:
+        model = Exams
+        fields = ('name', 'logoUrl', 'subjects', 'startDate', 'stopDate')
 
 
 class ExamSubjectSerializer(serializers.ModelSerializer):
@@ -22,7 +30,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ('question', 'text', 'is_valid')
+        fields = ('question', 'text')
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -33,11 +41,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ['exam', 'subject', 'year', 'id', 'serial_no', 'question_text', 'answers']
+        fields = ['exam', 'subject', 'year', 'id', 'serial_no', 'question_text',  'answers', 'correct']
 
     @staticmethod
     def get_answers(obj):
-        return [{'id': a.id, 'text': a.text, 'is_valid': a.is_valid} for a in obj.answers.all()]
+        return obj.answers.values('text')
 
 
 class UserScoreSerializer(serializers.ModelSerializer):
@@ -57,3 +65,4 @@ class LeadersBoardSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'total_points')
         ordering = ('-total_points',)
+

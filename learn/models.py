@@ -2,6 +2,30 @@ from django.db import models
 from django.contrib.auth.models import User
 from ckeditor.widgets import CKEditorWidget
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from multiselectfield import MultiSelectField
+
+
+MY_CHOICES = (('english', 'English Language'),
+              ('math', 'Mathematics'),
+              ('geography', 'Geography'),
+              ('chemistry', 'Chemistry'),
+              ('physics', 'Physics'))
+
+
+class Exams(models.Model):
+    name = models.CharField(max_length=64, verbose_name=u'Exam Body Name')
+    logoUrl = models.ImageField(upload_to='staff', verbose_name=u'Exam Body Logo', blank=True)
+    subjects = MultiSelectField(choices=MY_CHOICES)
+    startDate = models.IntegerField(verbose_name=u'Start of Exam Years', blank=True)
+    stopDate = models.IntegerField(verbose_name=u'End of Exam Years', blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Exam"
+        verbose_name_plural = "Exams"
+        ordering = ['name', 'subjects', 'startDate', 'stopDate']
 
 
 class ExamSubject(models.Model):
@@ -25,12 +49,13 @@ class ExamSubject(models.Model):
 class Question(models.Model):
     question_text = models.TextField(verbose_name=u'Question\'s text')
     serial_no = models.IntegerField(verbose_name='Question\'s index',
-            help_text='Questions will be shown based on their index, and this index is shown as the question number')
+                                    help_text='Questions will be shown based on their index')
     is_published = models.BooleanField(default=False)
     exam = models.ForeignKey(ExamSubject, related_name='questions', on_delete=models.CASCADE)
+    correct = models.TextField(verbose_name=u'Correct Answer\'s text', blank=True)
 
     def __str__(self):
-        return "{index} - {content} - {exam}".format(index=self.serial_no, content=self.question_text, exam=self.exam)
+        return "{index} - {exam}".format(index=self.serial_no, exam=self.exam)
 
     class Meta:
         verbose_name = "Question"
@@ -41,7 +66,6 @@ class Question(models.Model):
 # answers to a question
 class Answer(models.Model):
     text = models.TextField(verbose_name=u'Answer\'s text')
-    is_valid = models.BooleanField(default=False, help_text='tick if answer is correct choice')
     question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)
 
     def __str__(self):
